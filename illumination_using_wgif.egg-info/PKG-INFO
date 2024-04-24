@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: illumination_using_wgif
+Version: 0.1.0
+Summary: A Python implementation of https://doi.org/10.1007/s41095-021-0232-x
+Home-page: https://github.com/shuds13/pyexample
+Author: Philip Müller
+Author-email: muellers.philp@googlemail.com
+License: CC BY 4.0 DEED
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: numpy>=1.26.3
+Requires-Dist: scipy>=1.11.4
+Requires-Dist: Pillow>=10.2.0
