@@ -1,3 +1,5 @@
+LICENSE
+README.md
 setup.py
 illumination_using_wgif/__init__.py
 illumination_using_wgif/illumination.py

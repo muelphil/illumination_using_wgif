@@ -1,12 +1,18 @@
 from .wgif import wgif
 import numpy as np
 from math import isinf
+import colorsys
+
+def adjust_lighting(rgb, new_lighting):
+    hls = colorsys.rgb_to_hls(rgb[0]/255, rgb[1]/255, rgb[2]/255)
+    rgb = colorsys.hls_to_rgb(hls[0], new_lighting, hls[2])
+    return [int(rgb[0]*255), int(rgb[1]*255), int(rgb[2]*255)]
 
 def rgb_to_greyscale(rgb):
     return 0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2]
 
-# https://doi.org/10.1007/s41095-021-0232-x
-def illuminate(image_data, color_restoration=False):
+# https://link.springer.com/article/10.1007/s41095-021-0232-x
+def illuminate(image_data, color_restoration=None): # TODO
     """Illuminates the given image
 
     Parameters
@@ -20,6 +26,9 @@ def illuminate(image_data, color_restoration=False):
     array
         The illuminated image values. The output depends on the type of image (rgb or greyscale) and color_restoration.
     """
+    if color_restoration not in [None, 'linear', 'hls']:
+        raise Exception("The provided color restoration method not supported, supported color restoration methods: [None, 'linear', 'hls']")
+    
     image_data = image_data.astype(np.uint8)
     is_greyscale = len(image_data.shape) == 2
     height, width = image_data.shape[0:2]
@@ -58,7 +67,7 @@ def illuminate(image_data, color_restoration=False):
     # 2.Improve the brightness of the fused image using the S-hyperbolic tangent function:
     b = np.mean(S_IE)
     S_IEf = 1 / (1 + np.exp(-8* (S_IE-b)))
-    if is_greyscale or not color_restoration:
+    if is_greyscale or color_restoration is None:
         return (S_IEf * 255).astype(np.uint8)
         
 # 4) Color restoration
@@ -67,8 +76,14 @@ def illuminate(image_data, color_restoration=False):
 
     # 2. Convert the enhanced HSI image to RGB by linear color restoration RGB(x, y) = a(x, y)RGB(x, y)
     new_image_data = np.copy(image_data)
-    for i in range(height): # for every pixel:
-        for j in range(width):
-            if not isinf(alpha[i][j]):
-                new_image_data[i][j] = tuple(map(lambda x: int(np.clip(x* alpha[i,j], 0, 255)), new_image_data[i][j]))
+    if color_restoration == 'linear':
+        for i in range(height): # for every pixel:
+            for j in range(width):
+                if not isinf(alpha[i][j]):
+                    new_image_data[i][j] = tuple(map(lambda x: int(np.clip(x* alpha[i,j], 0, 255)), new_image_data[i][j]))
+    elif color_restoration == 'hls':
+        for i in range(height): # for every pixel:
+            for j in range(width):
+                if not isinf(alpha[i][j]):
+                    new_image_data[i][j] = tuple(map(lambda x: int(np.clip(x, 0, 255)), adjust_lighting(new_image_data[i][j], S_IEf[i][j])))
     return new_image_data
