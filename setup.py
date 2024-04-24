@@ -4,7 +4,7 @@ setup(
     name='illumination_using_wgif',
     version='0.1.0',    
     description='A Python implementation of https://doi.org/10.1007/s41095-021-0232-x',
-    url='https://github.com/shuds13/pyexample',
+    url='https://github.com/muelphil/illumination_using_wgif',
     author='Philip Müller',
     author_email='muellers.philp@googlemail.com',
     license='CC BY 4.0 DEED',
